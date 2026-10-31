@@ -1,0 +1,1 @@
+REVOKE EXECUTE ON FUNCTION public.admin_grant_scratch_tickets(uuid,integer,text), public.admin_set_scratch_event(boolean), public.admin_list_ambassadors(), public.affiliate_my_stats() FROM PUBLIC, anon;
