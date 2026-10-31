@@ -333,6 +333,41 @@ export type Database = {
         }
         Relationships: []
       }
+      affiliate_scratch_grants: {
+        Row: {
+          admin_id: string | null
+          ambassador_id: string
+          created_at: string
+          extra_tickets: number
+          id: string
+          note: string | null
+        }
+        Insert: {
+          admin_id?: string | null
+          ambassador_id: string
+          created_at?: string
+          extra_tickets: number
+          id?: string
+          note?: string | null
+        }
+        Update: {
+          admin_id?: string | null
+          ambassador_id?: string
+          created_at?: string
+          extra_tickets?: number
+          id?: string
+          note?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "affiliate_scratch_grants_ambassador_id_fkey"
+            columns: ["ambassador_id"]
+            isOneToOne: false
+            referencedRelation: "affiliate_accounts"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       affiliate_shop_items: {
         Row: {
           coins_cost: number
@@ -1515,6 +1550,11 @@ export type Database = {
         Args: { p_amount: number; p_user_id: string }
         Returns: Json
       }
+      admin_grant_scratch_tickets: {
+        Args: { p_ambassador_id: string; p_amount: number; p_note?: string }
+        Returns: Json
+      }
+      admin_list_ambassadors: { Args: never; Returns: Json }
       admin_read_redemptions: {
         Args: never
         Returns: {
@@ -1551,6 +1591,7 @@ export type Database = {
         Args: { p_expires_at: string; p_plan: string; p_user_id: string }
         Returns: Json
       }
+      admin_set_scratch_event: { Args: { p_active: boolean }; Returns: Json }
       affiliate_active_multiplier: {
         Args: { p_ambassador_id: string }
         Returns: number
@@ -1563,6 +1604,7 @@ export type Database = {
         Args: { p_ambassador_id: string; p_dantes: number; p_desc?: string }
         Returns: Json
       }
+      affiliate_my_stats: { Args: never; Returns: Json }
       affiliate_redeem: {
         Args: { p_item_id: string; p_pix_key?: string; p_pix_key_type?: string }
         Returns: Json
