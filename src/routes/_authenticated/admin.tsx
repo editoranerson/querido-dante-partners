@@ -263,8 +263,8 @@ function PixQueue() {
   return (
     <section className="rounded-2xl border border-border bg-card p-5">
       <div className="mb-4 flex gap-2">
-        {["pendente", "pago", "rejeitado"].map((s) => (
-          <Button key={s} size="sm" variant={status === s ? "hero" : "secondary"} onClick={() => setStatus(s)}>{{ pendente: "Pendentes", pago: "Pagos", rejeitado: "Rejeitados" }[s]}</Button>
+        {["pendente", "pago", "recusado"].map((s) => (
+          <Button key={s} size="sm" variant={status === s ? "hero" : "secondary"} onClick={() => setStatus(s)}>{{ pendente: "Pendentes", pago: "Pagos", recusado: "Rejeitados" }[s]}</Button>
         ))}
       </div>
       <div className="overflow-auto">
@@ -283,7 +283,7 @@ function PixQueue() {
                   {r.status === "pendente" && (
                     <>
                       <Button size="sm" variant="hero" onClick={() => m.mutate({ id: r.id, st: "pago" })}><Check className="h-3 w-3" /></Button>
-                      <Button size="sm" variant="destructive" onClick={() => m.mutate({ id: r.id, st: "rejeitado" })}><X className="h-3 w-3" /></Button>
+                      <Button size="sm" variant="destructive" onClick={() => m.mutate({ id: r.id, st: "recusado" })}><X className="h-3 w-3" /></Button>
                     </>
                   )}
                 </TableCell>
