@@ -109,7 +109,7 @@ function GrantDialog({ amb, onClose }: { amb: Amb | null; onClose: () => void })
   const history = useQuery({
     queryKey: ["grants", amb?.user_id],
     enabled: !!amb,
-    queryFn: async () => (await (supabase.from as unknown as (t: string) => ReturnType<typeof supabase.from<"affiliate_redemptions">>)("affiliate_scratch_grants").select("*").eq("ambassador_id", amb!.user_id).order("created_at", { ascending: false })).data as unknown as { id: string; extra_tickets: number; note: string | null; created_at: string }[] ?? [],
+    queryFn: async () => (await supabase.from("affiliate_scratch_grants").select("*").eq("ambassador_id", amb!.user_id).order("created_at", { ascending: false })).data ?? [],
   });
   const m = useMutation({
     mutationFn: () => rpc("admin_grant_scratch_tickets", { p_ambassador_id: amb!.user_id, p_amount: qty, p_note: note || null }),
