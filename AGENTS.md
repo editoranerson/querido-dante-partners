@@ -8,3 +8,7 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+## Architecture rules
+- Data access goes from the browser straight to Supabase (RLS + SECURITY DEFINER RPCs that check `is_admin()`/`auth.uid()`); there are no server functions — keep privileged logic inside SQL functions.
+- Referral attribution and coin conversion live only in `src/lib/referral.ts` so the rules are tested in one place.
