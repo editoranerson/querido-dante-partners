@@ -315,7 +315,7 @@ function Withdraw({ coins }: { coins: number }) {
 }
 
 export function StatusBadge({ status }: { status: string }) {
-  const cls = status === "pago" || status === "aprovado" ? "bg-success text-success-foreground" : status === "rejeitado" ? "bg-destructive text-destructive-foreground" : "bg-secondary text-secondary-foreground";
-  const label = { pendente: "Pendente", pago: "Pago", aprovado: "Pago", rejeitado: "Rejeitado" }[status] ?? status;
+  const cls = status === "pago" || status === "aprovado" ? "bg-success text-success-foreground" : status === "recusado" || status === "rejeitado" ? "bg-destructive text-destructive-foreground" : "bg-secondary text-secondary-foreground";
+  const label = { pendente: "Pendente", pago: "Pago", aprovado: "Pago", rejeitado: "Rejeitado", recusado: "Rejeitado" }[status] ?? status;
   return <Badge className={cls}>{label}</Badge>;
 }
