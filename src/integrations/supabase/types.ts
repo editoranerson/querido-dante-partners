@@ -811,6 +811,41 @@ export type Database = {
           },
         ]
       }
+      coin_retention_rules: {
+        Row: {
+          ambassador_id: string
+          created_at: string
+          description: string
+          destinations: Json
+          id: string
+          is_active: boolean
+        }
+        Insert: {
+          ambassador_id: string
+          created_at?: string
+          description?: string
+          destinations?: Json
+          id?: string
+          is_active?: boolean
+        }
+        Update: {
+          ambassador_id?: string
+          created_at?: string
+          description?: string
+          destinations?: Json
+          id?: string
+          is_active?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "coin_retention_rules_ambassador_id_fkey"
+            columns: ["ambassador_id"]
+            isOneToOne: false
+            referencedRelation: "affiliate_accounts"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       contact_messages: {
         Row: {
           created_at: string
@@ -898,6 +933,95 @@ export type Database = {
           is_active?: boolean
           sort_order?: number
           title?: string
+        }
+        Relationships: []
+      }
+      dante_wallet: {
+        Row: {
+          balance: number
+          id: number
+          last_yield_at: string
+          updated_at: string
+          yield_pct: number
+          yield_period: string
+        }
+        Insert: {
+          balance?: number
+          id?: number
+          last_yield_at?: string
+          updated_at?: string
+          yield_pct?: number
+          yield_period?: string
+        }
+        Update: {
+          balance?: number
+          id?: number
+          last_yield_at?: string
+          updated_at?: string
+          yield_pct?: number
+          yield_period?: string
+        }
+        Relationships: []
+      }
+      dante_wallet_auto_dist: {
+        Row: {
+          ambassador_id: string
+          created_at: string
+          id: string
+          is_active: boolean
+          note: string
+          percent: number
+        }
+        Insert: {
+          ambassador_id: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          note?: string
+          percent: number
+        }
+        Update: {
+          ambassador_id?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          note?: string
+          percent?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dante_wallet_auto_dist_ambassador_id_fkey"
+            columns: ["ambassador_id"]
+            isOneToOne: false
+            referencedRelation: "affiliate_accounts"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      dante_wallet_ledger: {
+        Row: {
+          ambassador_id: string | null
+          amount: number
+          created_at: string
+          description: string
+          id: string
+          kind: string
+        }
+        Insert: {
+          ambassador_id?: string | null
+          amount: number
+          created_at?: string
+          description?: string
+          id?: string
+          kind: string
+        }
+        Update: {
+          ambassador_id?: string | null
+          amount?: number
+          created_at?: string
+          description?: string
+          id?: string
+          kind?: string
         }
         Relationships: []
       }
@@ -1491,6 +1615,19 @@ export type Database = {
       }
     }
     Functions: {
+      _apply_retention: {
+        Args: { p_amb: string; p_base: number; p_retro: boolean }
+        Returns: number
+      }
+      _wallet_credit: {
+        Args: {
+          p_amb?: string
+          p_amount: number
+          p_desc: string
+          p_kind: string
+        }
+        Returns: undefined
+      }
       activate_subscription_plan: {
         Args: { p_expires_at: string; p_plan: string; p_user_id: string }
         Returns: Json
@@ -1538,6 +1675,16 @@ export type Database = {
         Args: { p_ambassador_id: string; p_referred_id: string }
         Returns: Json
       }
+      admin_create_retention: {
+        Args: {
+          p_ambassador_id: string
+          p_description: string
+          p_destinations: Json
+          p_retain_existing?: boolean
+        }
+        Returns: Json
+      }
+      admin_delete_retention: { Args: { p_id: string }; Returns: Json }
       admin_grant_card: {
         Args: { p_card_id: string; p_user_id: string }
         Returns: Json
@@ -1592,6 +1739,23 @@ export type Database = {
         Returns: Json
       }
       admin_set_scratch_event: { Args: { p_active: boolean }; Returns: Json }
+      admin_toggle_retention: {
+        Args: { p_active: boolean; p_id: string }
+        Returns: Json
+      }
+      admin_wallet_add_autodist: {
+        Args: { p_ambassador_id: string; p_note?: string; p_percent: number }
+        Returns: Json
+      }
+      admin_wallet_remove_autodist: { Args: { p_id: string }; Returns: Json }
+      admin_wallet_set_yield: {
+        Args: { p_pct: number; p_period: string }
+        Returns: Json
+      }
+      admin_wallet_transfer: {
+        Args: { p_ambassador_id: string; p_amount: number; p_note?: string }
+        Returns: Json
+      }
       affiliate_active_multiplier: {
         Args: { p_ambassador_id: string }
         Returns: number
@@ -1633,6 +1797,7 @@ export type Database = {
       become_ambassador: { Args: never; Returns: Json }
       check_affiliate_account: { Args: never; Returns: Json }
       confirm_visit_retention: { Args: { p_visit_id: string }; Returns: Json }
+      dante_wallet_apply_yield: { Args: never; Returns: Json }
       ensure_affiliate_account: {
         Args: never
         Returns: {
