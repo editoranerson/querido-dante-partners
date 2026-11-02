@@ -30,6 +30,9 @@ const SOURCE_LABEL: Record<string, string> = {
   scratch: "Raspadinhas",
   redemption: "Resgates",
   admin_adjust: "Ajuste admin",
+  retention: "Saldo retido",
+  retention_in: "Repasse recebido",
+  wallet_transfer: "Transferência recebida",
 };
 
 function Dashboard() {
