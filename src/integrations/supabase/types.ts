@@ -1616,7 +1616,7 @@ export type Database = {
     }
     Functions: {
       _apply_retention: {
-        Args: { p_amb: string; p_base: number; p_retro: boolean }
+        Args: { p_amb: string; p_base: number; p_rule: string }
         Returns: number
       }
       _wallet_credit: {
