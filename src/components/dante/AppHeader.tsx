@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
-import { ArrowLeft, LogOut, Shield, LayoutDashboard } from "lucide-react";
+import { ArrowLeft, LogOut, Shield, LayoutDashboard, Vault } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
@@ -33,6 +33,11 @@ export function AppHeader() {
           {me?.isAdmin && (
             <Button asChild variant="ghost" size="sm">
               <Link to="/admin" activeProps={{ className: "text-primary" }}><Shield className="h-4 w-4" /><span className="hidden sm:inline">Admin</span></Link>
+            </Button>
+          )}
+          {me?.isAdmin && (
+            <Button asChild variant="ghost" size="sm">
+              <Link to="/carteira" activeProps={{ className: "text-primary" }}><Vault className="h-4 w-4" /><span className="hidden sm:inline">Carteira</span></Link>
             </Button>
           )}
         </nav>
