@@ -31,7 +31,7 @@ export const Route = createFileRoute("/_authenticated/carteira")({
 });
 
 type Amb = { user_id: string; referral_code: string; full_name: string | null; coins: number };
-type Dest = { type: "wallet" | "ambassador"; ambassador_id?: string; percent: number };
+type Dest = { type: "wallet" | "ambassador"; ambassador_id?: string | undefined; percent: number };
 type Rule = { id: string; ambassador_id: string; description: string; destinations: Dest[]; is_active: boolean; created_at: string };
 
 async function rpc(name: string, args?: Record<string, unknown>) {
@@ -59,7 +59,7 @@ const ambName = (list: Amb[] | undefined, id?: string | null) => {
   return a ? `${a.full_name || "Sem nome"} (${a.referral_code})` : "—";
 };
 
-function AmbSelect({ value, onChange, list }: { value: string; onChange: (v: string) => void; list?: Amb[] }) {
+function AmbSelect({ value, onChange, list }: { value: string; onChange: (v: string) => void; list?: Amb[] | undefined }) {
   return (
     <Select value={value} onValueChange={onChange}>
       <SelectTrigger className="text-base sm:text-sm"><SelectValue placeholder="Escolha o embaixador" /></SelectTrigger>

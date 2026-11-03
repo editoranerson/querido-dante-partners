@@ -493,6 +493,82 @@ export type Database = {
           },
         ]
       }
+      ambassador_wallet_ledger: {
+        Row: {
+          amount: number
+          created_at: string
+          description: string
+          id: string
+          kind: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          description?: string
+          id?: string
+          kind: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          description?: string
+          id?: string
+          kind?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ambassador_wallet_ledger_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "affiliate_accounts"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      ambassador_wallets: {
+        Row: {
+          auto_deposit: boolean
+          balance: number
+          created_at: string
+          cycle_new: number
+          cycle_weighted: number
+          shared: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          auto_deposit?: boolean
+          balance?: number
+          created_at?: string
+          cycle_new?: number
+          cycle_weighted?: number
+          shared?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          auto_deposit?: boolean
+          balance?: number
+          created_at?: string
+          cycle_new?: number
+          cycle_weighted?: number
+          shared?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ambassador_wallets_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "affiliate_accounts"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       archived_chapters: {
         Row: {
           archive_reason: string
@@ -938,24 +1014,33 @@ export type Database = {
       }
       dante_wallet: {
         Row: {
+          amb_yield_pct: number
+          amb_yield_period: string
           balance: number
           id: number
+          last_closing_date: string | null
           last_yield_at: string
           updated_at: string
           yield_pct: number
           yield_period: string
         }
         Insert: {
+          amb_yield_pct?: number
+          amb_yield_period?: string
           balance?: number
           id?: number
+          last_closing_date?: string | null
           last_yield_at?: string
           updated_at?: string
           yield_pct?: number
           yield_period?: string
         }
         Update: {
+          amb_yield_pct?: number
+          amb_yield_period?: string
           balance?: number
           id?: number
+          last_closing_date?: string | null
           last_yield_at?: string
           updated_at?: string
           yield_pct?: number
@@ -1560,6 +1645,35 @@ export type Database = {
           },
         ]
       }
+      wallet_special_yield: {
+        Row: {
+          ambassador_id: string
+          created_at: string
+          pct: number
+          period: string
+        }
+        Insert: {
+          ambassador_id: string
+          created_at?: string
+          pct: number
+          period: string
+        }
+        Update: {
+          ambassador_id?: string
+          created_at?: string
+          pct?: number
+          period?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wallet_special_yield_ambassador_id_fkey"
+            columns: ["ambassador_id"]
+            isOneToOne: true
+            referencedRelation: "affiliate_accounts"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
     }
     Views: {
       spotlights: {
@@ -1619,6 +1733,10 @@ export type Database = {
         Args: { p_amb: string; p_base: number; p_rule: string }
         Returns: number
       }
+      _cycle_bounds: {
+        Args: { p_period: string }
+        Returns: Record<string, unknown>
+      }
       _wallet_credit: {
         Args: {
           p_amb?: string
@@ -1627,6 +1745,20 @@ export type Database = {
           p_kind: string
         }
         Returns: undefined
+      }
+      _wallet_ensure: { Args: { p_uid: string }; Returns: undefined }
+      _wallet_move: {
+        Args: {
+          p_amount: number
+          p_desc: string
+          p_kind: string
+          p_uid: string
+        }
+        Returns: undefined
+      }
+      _wallet_rate: {
+        Args: { p_uid: string }
+        Returns: Record<string, unknown>
       }
       activate_subscription_plan: {
         Args: { p_expires_at: string; p_plan: string; p_user_id: string }
@@ -1702,6 +1834,7 @@ export type Database = {
         Returns: Json
       }
       admin_list_ambassadors: { Args: never; Returns: Json }
+      admin_list_wallets: { Args: never; Returns: Json }
       admin_read_redemptions: {
         Args: never
         Returns: {
@@ -1720,6 +1853,10 @@ export type Database = {
         }
       }
       admin_remove_referral: { Args: { p_referral_id: string }; Returns: Json }
+      admin_remove_special_yield: {
+        Args: { p_ambassador_id: string }
+        Returns: Json
+      }
       admin_save_custom_rules: {
         Args: {
           p_ambassador_id: string
@@ -1739,6 +1876,14 @@ export type Database = {
         Returns: Json
       }
       admin_set_scratch_event: { Args: { p_active: boolean }; Returns: Json }
+      admin_set_shared_wallet: {
+        Args: { p_ambassador_id: string; p_on: boolean }
+        Returns: Json
+      }
+      admin_set_special_yield: {
+        Args: { p_ambassador_id: string; p_pct: number; p_period: string }
+        Returns: Json
+      }
       admin_toggle_retention: {
         Args: { p_active: boolean; p_id: string }
         Returns: Json
@@ -1748,6 +1893,10 @@ export type Database = {
         Returns: Json
       }
       admin_wallet_remove_autodist: { Args: { p_id: string }; Returns: Json }
+      admin_wallet_set_amb_yield: {
+        Args: { p_pct: number; p_period: string }
+        Returns: Json
+      }
       admin_wallet_set_yield: {
         Args: { p_pct: number; p_period: string }
         Returns: Json
@@ -1854,6 +2003,12 @@ export type Database = {
         Args: { p_credits?: number; p_referred_id: string }
         Returns: Json
       }
+      wallet_deposit: { Args: { p_amount: number }; Returns: Json }
+      wallet_my: { Args: never; Returns: Json }
+      wallet_run_closing: { Args: never; Returns: Json }
+      wallet_send: { Args: { p_amount: number; p_code: string }; Returns: Json }
+      wallet_set_auto: { Args: { p_on: boolean }; Returns: Json }
+      wallet_withdraw: { Args: { p_amount: number }; Returns: Json }
     }
     Enums: {
       ad_placement: "home" | "html" | "infeed"
